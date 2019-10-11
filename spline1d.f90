@@ -1,16 +1,19 @@
 module spline
     implicit none
-    integer, parameter:: dp=kind(0.d0)
-    integer(dp) :: nn 
-    real(dp),allocatable,dimension(:)    :: xarr, yarr, diff
+    integer, parameter:: dp=kind(0.d0) !double precision
+    integer(kind=dp) :: nn 
+    real(kind=dp),allocatable,dimension(:)    :: xarr, yarr, diff
     private :: xarr, yarr, diff, nn 
     contains
 
 
     subroutine splrep(x,y)
-        real(dp), intent(in)    :: x(:),y(:)
-        integer(dp)             :: i ,k
-        real(dp)                :: u(size(x)),sig, p, qn, un, yp1, ypn
+        ! takes the s,y input and computes the spline representation
+        ! x : independent data points
+        ! y : data values corresponding to the x values
+        real(kind=dp), intent(in)    :: x(:),y(:)
+        integer(kind=dp)             :: i ,k
+        real(kind=dp)                :: u(size(x)),sig, p, qn, un, yp1, ypn
         yp1 = 1.0d30
         ypn = 1.0d30
 
@@ -46,10 +49,11 @@ module spline
     end subroutine splrep
 
 
-    elemental real(dp) function splev(xinp) result(yout)
-        real(dp), intent(in)::xinp
-        integer(dp)             :: k, khi, klo
-        real(dp)                :: h,a,b
+    elemental real(kind=dp) function splev(xinp) result(yout)
+        ! evaluate value at one/multiple input values once the spline representaion is done
+        real(kind=dp), intent(in)::xinp
+        integer(kind=dp)             :: k, khi, klo
+        real(kind=dp)                :: h,a,b
 
         klo=1
         khi=nn
@@ -72,7 +76,7 @@ end module spline
 
 program test
     use spline
-    real(dp) :: a(5)
+    real(kind=dp) :: a(5)
     a=(/1,4,9,16,25/)
     ! feed the arrays through this call, or one can use public arrays too
     call splrep(a,a**2)
