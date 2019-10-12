@@ -77,7 +77,7 @@ end module spline
 program test
     use spline
     real(kind=dp) :: a(5)
-    a=(/1,4,9,16,25/)
+    a=[1,4,9,16,25]
     ! feed the arrays through this call, or one can use public arrays too
     call splrep(a,a**2)
     write(*,*) splev(3.5_dp)
