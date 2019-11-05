@@ -1,7 +1,7 @@
 program name
     implicit none
     interface
-    subroutine asimplesub(xx, y, z)
+    subroutine asimplesub(xx, y, z) !<-- notice the actual arguments name changed
         implicit none
         integer,intent(in) :: xx,y
         integer,optional :: z
