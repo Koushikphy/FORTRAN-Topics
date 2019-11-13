@@ -4,6 +4,5 @@
         "**/*.pyc":true,
         "**/*.mod":true,
         "**/*.out":true
-    },
-    "python.linting.enabled": false
+    }
 }
