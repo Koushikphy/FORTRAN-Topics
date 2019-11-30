@@ -55,8 +55,11 @@ function newFunc(x,x1) result(y)
    use newT
    type(myreal), intent(in) :: x,x1
    real :: y
-   y=sqrt(x%x**2+x1%x**2)   ! takes `x` argument of myreal and calculate norm
+   y=sqrt(x%x**2+x1%x**2) ! takes `x` argument of myreal and calculate norm
 end function newFunc
+
+
+
 
 
 program myProgram
