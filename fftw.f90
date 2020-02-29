@@ -38,6 +38,7 @@ enddo
 ! explicit array is required
 print *, sum(x)
 call dfftw_plan_dft_1d(plan,n,x,y,FFTW_FORWARD,ior(FFTW_MEASURE, FFTW_DESTROY_INPUT))
+call dfftw_plan_dft_1d(plane,n,x,y,FFTW_BACKWARD,ior(FFTW_MEASURE, FFTW_DESTROY_INPUT))
 print *, sum(x)
 
 call dfftw_execute_dft(plan, sin2y, out)
