@@ -1,0 +1,21 @@
+! info is provided by  &<group>.../ construct
+! order of key-value pair not important
+
+
+
+
+&BAR
+a=1.9
+/
+
+
+&FOO       ! case insensitive group name
+! x is an array, will crash if not of same dimension, no braces are allowed to pass array
+x = 1,2,3  
+x(3) = 5                        ! is allowed
+y = 8d-3
+z = (1,2)                       ! a complex number
+p = 'geger'                     ! a string
+/
+
+
