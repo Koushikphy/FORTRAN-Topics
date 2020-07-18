@@ -45,3 +45,9 @@ function factorial3(x) result(y)
     integer :: x,y
     y = int(gamma(real(x+1)))
 end function factorial3
+
+
+double precision recursive function fact(n) result(val)
+    integer :: n
+    val = merge(1.0d0,n*fact(n-1),n==0)
+end function
