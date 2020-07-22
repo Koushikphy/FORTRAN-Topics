@@ -1,24 +1,6 @@
-!  finds sqrt(a**2+b**2) without overflow (i.e no number greater than a or b is calculated anywhere in the calculation) 
+!  finds sqrt(a**2+b**2) without overflow or overflow (i.e no number greater than a or b is calculated anywhere in the calculation) 
 !  or destructive underflow
 
-
-! REAL*8 FUNCTION PYTHAGo(A,B)
-!       implicit real*8(a-h,o-z)
-!     !  finds sqrt(a**2+b**2) without overflow or destructive underflow
-!       P = dMAX1(dABS(A),daBS(B))
-!       IF (P .EQ. 0.0d0) GO TO 20
-!       R = (dMIN1(dABS(A),dABS(B))/P)**2
-!    10 CONTINUE
-!          T = 4.0d0 + R
-!          IF (T .EQ. 4.0d0) GO TO 20
-!          S = R/T
-!          U = 1.0d0 + 2.0d0*S
-!          P = U*P
-!          R = (S/U)**2 * R
-!       GO TO 10
-!    20 PYTHAG = P
-!       RETURN
-!       END
 
 
 real*8 function pythag(a,b) result(p)
