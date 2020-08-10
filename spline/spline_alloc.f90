@@ -3,11 +3,10 @@ module spline_mod_alloc
     real(kind=8), allocatable,private :: yGrid(:),xGrid(:),zVals(:,:),diffs(:,:)
     contains
 
-    subroutine initVars(xG,yG,nGX,nGY)  ! inital call to setup variable
-        integer, intent(in) :: nGX,nGY
-        real(kind=8),intent(in) :: xG(nGX), yG(nGY)
-        nY = nGY
-        nX = nGX
+    subroutine initVars(xG,yG)  ! inital call to setup variable
+        real(kind=8),intent(in) :: xG(:), yG(:)
+        nY = size(yG)
+        nX = size(xG)
         allocate(xGrid(nX),yGrid(nY),zVals(nY,nX),diffs(nY,nX))
         yGrid = yG
         xGrid = xG
