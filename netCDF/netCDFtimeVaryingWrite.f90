@@ -60,12 +60,12 @@ program name
 
 
     ! write data
-    do i=1,1000
+    do i=1,3
         ! start means where to start to put the data in each dimension, 
         ! and count means how much if each dimension to fill
         ! a particular timestep data obviously will span the whole x,y grid but a single point in time dimension
         ! thus the value of `count`; and start(3) i.e. time coordinate will change in each timestep
-        call random_number(dat) ! just some random data to fill
+        ! call random_number(dat) ! just some random data to fill
         dat = i
         call check( nf90_put_var(ncid, data_id, dat, start = [1,1,i], count = [nx,ny,1]) )
         call check( nf90_sync(ncid))  ! flush out data if needed
