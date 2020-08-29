@@ -5,11 +5,9 @@ module spline_mod_alloc
 
     subroutine initVars(xG,yG)  ! inital call to setup variable
         real(kind=8),intent(in) :: xG(:), yG(:)
-        nY = size(yG)
-        nX = size(xG)
+        nY = size(yG); nX = size(xG)
         allocate(xGrid(nX),yGrid(nY),zVals(nY,nX),diffs(nY,nX))
-        yGrid = yG
-        xGrid = xG
+        yGrid = yG; xGrid = xG
     end subroutine
 
     subroutine splie2(zValsIn) ! called one time to calculate all the differentiation to use

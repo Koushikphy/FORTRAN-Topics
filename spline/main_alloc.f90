@@ -9,7 +9,7 @@ program name
     real(kind=8) :: data(nph,nth), xGrid(nth),yGrid(nph),v1,v2,x, diff(nph,nth), dx,dy
 
 
-    open(1,file="data.dat",status="old")
+    open(1,file="data.dat",status="old",action="read")
 
     do i=1,nth
         do j=1,nph 
@@ -21,8 +21,7 @@ program name
     call system_clock(count_rate=ir)
     call system_clock(n1)
 
-    call initVars(xGrid,yGrid,nth,nph)
-
+    call initVars(xGrid,yGrid)
     call splie2(data)
 
     dx = (xGrid(nth)-xGrid(1))/real((newNth-1),8)
@@ -32,7 +31,6 @@ program name
         v1 = dx*(i-1) + xGrid(1)
         do j=1,newNph
             v2 = dy*(j-1)+ yGrid(1)
-
             write(221,*)v1,v2,splin2(v1,v2)
         enddo
         write(221,*)
@@ -41,12 +39,12 @@ program name
 
     print *, '====>', (n2-n1)/real(ir)
 
-    call splin2Grid(newNth, newNph)
+    ! call splin2Grid(newNth, newNph)
 
 
-    call system_clock(n1)
+    ! call system_clock(n1)
 
-    print *, '====>', (n1-n2)/real(ir)
+    ! print *, '====>', (n1-n2)/real(ir)
 
 
 end program name
