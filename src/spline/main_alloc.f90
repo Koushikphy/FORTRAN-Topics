@@ -12,7 +12,7 @@ program name
     open(1,file="data.dat",status="old",action="read")
 
     do i=1,nth
-        do j=1,nph 
+        do j=1,nph
             read(1,*)x,xGrid(i),yGrid(j),data(j,i),x,x,x
         enddo
         read(1,*)

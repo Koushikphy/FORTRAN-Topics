@@ -20,7 +20,6 @@ program name
     call system_clock(count_rate=ir)
     call system_clock(n1)
 
-
     call splie2(xGrid,yGrid,data,nth,nph,diff)
 
     dx = (xGrid(nth)-xGrid(1))/real((newNth-1),8)

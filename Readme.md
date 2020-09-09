@@ -21,3 +21,4 @@
 1. [Don't initialize variable in declaration](src/local_init.f90)
 1. [Matrix multiplication without a loop?](src/mat.f90)
 1. [LAPACK](src/LAPACK)
+1. [MPI+OpenMP](src/mpiOpenMP.f90)
