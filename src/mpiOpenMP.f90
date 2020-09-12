@@ -8,12 +8,17 @@ program name
     call MPI_COMM_SIZE(MPI_COMM_WORLD, num_procs, ierr) ! get total number of processes spawn
     call MPI_GET_PROCESSOR_NAME(pName, nresLen, ierr)   ! get name of the host for current process
 
-    ! each process now splits into OpenMP threads
+
+
     !$omp parallel do
     do i=1,omp_get_max_threads() ! <--splits into maximum threads
-        write(111,"('Hello World from process: ',i3, ' on ', a, ',  thread: ', i3)") my_id,trim(pName), omp_get_thread_num() ! get currnt thread id
+        write(*,"('Hello World from process: ',i3, ' on ', a, ',  thread: ', i3)") my_id,trim(pName), omp_get_thread_num() ! get currnt thread id
     enddo
     !$omp end parallel do
+    
+    ! NOTE: the write is on stdout, why? normal file write won't work with MPI, but openmp queue/wait units during I/Os
+    ! Want to write to a unit-ed file, try blocking the MPI child one at a time when it enters that loop region
+
 
     call MPI_FINALIZE(ierr) ! join MPI tasks
     ! all MPI subroutines in fortran, has one error status `ierr` returned.
