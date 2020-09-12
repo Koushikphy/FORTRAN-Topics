@@ -1,14 +1,15 @@
-### A Collectioon for random Fortran codes
+### A Collection for random Fortran codes
 ### Table-of-Contents
 1. [OOP](src/oop.f90)
 1. [Optional keyword argument](src/optional_keyword_argument.f90)
+1. [Parse Commnadline argumensts](src/commandLine.f90)
 1. [Derived data types](src/derived_data_types.f90)
 1. [Interface](src/interface.f90)
 1. [Operator overloading 1](src/overload.f90)
 1. [Operator overloading 2](src/overload2.f90)
 1. [Pointer](src/pointer.f90)
-1. [factorial ](src/factorial.f90)
-1. [factorial 2](src/factorial_mod.f90)
+1. [factorial (as direct function)](src/factorial.f90)
+1. [factorial (as module that saves values)](src/factorial_mod.f90)
 1. [linspace/arrange anlogous to NumPy](src/linspace.f90)
 1. [Namelist file I/O](src/namelist_main.f90)
 1. [Preprocessing](src/preprocess.F90)
@@ -22,4 +23,3 @@
 1. [Matrix multiplication without a loop?](src/mat.f90)
 1. [LAPACK](src/LAPACK)
 1. [MPI+OpenMP Check](src/mpiOpenMP.f90)  
-1. [Parse Commnadline argumensts](src/commandLine.f90)
