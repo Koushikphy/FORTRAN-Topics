@@ -9,7 +9,7 @@ program name
     call MPI_GET_PROCESSOR_NAME(pName, nresLen, ierr)   ! get name of the host for current process
 
 
-
+    ! now every process will spawn their own openmp threads, try setting OpenMP affinity, to check where they are spawn
     !$omp parallel do
     do i=1,omp_get_max_threads() ! <--splits into maximum threads
         write(*,"('Hello World from process: ',i3, ' on ', a, ',  thread: ', i3)") my_id,trim(pName), omp_get_thread_num() ! get currnt thread id

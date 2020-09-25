@@ -25,7 +25,7 @@ program nml
     ! read values from config.nml, if present
     open(newunit=u, file=trim(conffile), action='read')
     read(u, nml=foo)
-    read(u, nml=bar)
+    ! read(u, nml=bar)
     close(u)
     print *, x,p, z
     print *, a,b
