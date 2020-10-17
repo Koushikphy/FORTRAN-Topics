@@ -23,4 +23,5 @@
 1. [Matrix multiplication without a loop?](src/mat.f90)
 1. [LAPACK](src/LAPACK)
 1. [MPI+OpenMP Check](src/mpiOpenMP.f90)  
-1. [FFTW](src/fftw.f90)
+1. [FFTW](src/fftw.f90)]
+1. [Differentiation with FFT](src/diffWithFFT.f90)
