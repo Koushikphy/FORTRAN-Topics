@@ -5,7 +5,7 @@ program name
     integer, parameter :: FFTW_MEASURE = 0
     integer, parameter :: FFTW_BACKWARD = +1
     integer, parameter :: n = 256  ! length of the Fourier space
-    real, parameter     :: l = 10   ! length of the acutal space
+    real, parameter    :: l = 10   ! length of the acutal space
     real, parameter    :: pi = 4.0*atan(1.0)
     real(kind=8)    :: grid(n),fVal(n),dFVal(n)
     complex(kind=8) :: fK_val(n), dfK_val(n), df_FFT(n)
