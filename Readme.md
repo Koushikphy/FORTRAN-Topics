@@ -25,3 +25,4 @@
 1. [MPI+OpenMP Check](src/mpiOpenMP.f90)  
 1. [FFTW](src/fftw.f90)]
 1. [Differentiation with FFT](src/diffWithFFT.f90)
+1. [FFTW uses different different definition to fourn](src/FFTWvsFOURN)
