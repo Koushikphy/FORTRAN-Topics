@@ -13,7 +13,7 @@
 1. [factorial (as module that saves values)](src/factorial_mod.f90)
 1. [linspace/arrange anlogous to NumPy](src/linspace.f90)
 1. [Namelist file I/O](src/namelist_main.f90)
-1. [Config Parser](src/config.f90)
+1. [Config Parser](src/configParser)
 1. [Preprocessing](src/preprocess.F90)
 1. [Pythag](src/pythag.f90)
 1. [1D spline](src/spline1d.f90)
