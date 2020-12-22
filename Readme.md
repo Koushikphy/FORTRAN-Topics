@@ -1,4 +1,4 @@
-### A Collection for random Fortran codes
+### A Collection for some random & useful Fortran codes
 ### Table-of-Contents
 1. [OOP](src/oop.f90)
 1. [Optional keyword argument](src/optional_keyword_argument.f90)
@@ -28,3 +28,4 @@
 1. [FFTW](src/fftw.f90)
 1. [Differentiation with FFT](src/diffWithFFT.f90)
 1. [FFTW uses different different definition to fourn](src/FFTWvsFOURN)
+1. [Conveniently use multiple time counter](src/timeCounter.f90)
