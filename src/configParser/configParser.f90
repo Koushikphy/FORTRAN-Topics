@@ -1,6 +1,6 @@
 module configParser
     ! generic function `parseVar` to parse variable of different kind
-    ! supperted types are: integer, real64, logical, string, complex, array of integer and array of real64s
+    ! supported types are: integer, real64, logical, string, complex, array of integer and array of real64s
     ! defualt values can be set by passing as optional 4th argument, which will be used in case of missing the key
     ! ^defualt value not avilable for array type parsing
     ! Will thorw error, in case of missing key in config file if no default values are set
