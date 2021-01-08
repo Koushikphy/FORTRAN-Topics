@@ -1,7 +1,8 @@
 ### Compiling with LAPACK
+Diagonalize matrix with LAPACK. Can be use to diagonalize three types of matrix Real Symmetric, Real symmetric tridiagonal and Real general. Check `example.f90` to get more info.
 Provided the LAPACK library is available in the path,
 ```
-gfortran program.f90 -llapack
+gfortran lapackInt.f90 example.f90 -llapack
 ```
 When using Intel Fortran compiler (ifort) `-mkl` option can be used insted to use the Intel Math Kernel library
 
