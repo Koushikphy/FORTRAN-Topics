@@ -2,7 +2,6 @@ module configParser
     ! generic function `parseVar` to parse variable of different kind
     ! supported types are: integer, real64, logical, string, complex, array of integer and array of real64s
     ! defualt values can be set by passing as optional 4th argument, which will be used in case of missing the key
-    ! ^defualt value not avilable for array type parsing
     ! Will thorw error, in case of missing key in config file if no default values are set
     interface parseVar
         module procedure parse_int, parse_real8, parse_logical, parse_string, parse_complex, parseIntArray, parseReal8Array
@@ -10,9 +9,10 @@ module configParser
 contains
 
 
-    subroutine parseIntArray(fUnit, varText, arr)
+    subroutine parseIntArray(fUnit, varText, arr, value)
         integer :: fUnit, ios
         integer, allocatable :: arr(:)
+        integer, intent(in), optional :: value(:)
         character(len=*) :: varText 
         character(len=100) :: lineTxt, key, val
         rewind(fUnit) ! start looking from top
@@ -24,13 +24,20 @@ contains
             if(key==varText) then
                 allocate(arr(countSubStr(val)))
                 read(val,*) arr
+                return
             endif
         enddo
+        if(present(value))then
+            arr = value
+        else
+            call error(varText)
+        endif
     end
 
-    subroutine parseReal8Array(fUnit, varText, arr)
+    subroutine parseReal8Array(fUnit, varText, arr, value)
         integer :: fUnit, ios
         real(kind=8), allocatable :: arr(:)
+        real(kind=8), intent(in), optional :: value(:) 
         character(len=*) :: varText 
         character(len=100) :: lineTxt, key, val
         rewind(fUnit) ! start looking from top
@@ -44,6 +51,12 @@ contains
                 read(val,*) arr
             endif
         enddo
+        if(present(value))then
+            arr = value
+        else
+            call error(varText)
+        endif
+
     end
 
     function countSubStr(str) result(nSubStr) !total length of the array, from counting occurrence of comma(',')
@@ -228,7 +241,7 @@ program name
     logical :: c
     character(len=100):: d
     complex(kind=8) :: e
-    integer , allocatable :: f(:)
+    integer , allocatable :: f(:), ff(:)
     real(kind=8) , allocatable :: g(:)
 
 
@@ -240,6 +253,7 @@ program name
     call parseVar(fUnit, 'd', d) ! parse string
     call parseVar(fUnit, 'e', e) ! parse conmplex
     call parseVar(fUnit, 'f', f) ! parse array of integer, variable has to be allocatable
+    call parseVar(fUnit, 'ff', ff, [1,2,99]) ! parse array of integer, variable has to be allocatable
     call parseVar(fUnit, 'g', g) ! parse array of real64, 
     print *, a
     print *,aa
@@ -248,5 +262,6 @@ program name
     print *,d
     print *,e
     print *, f
+    print *, ff
     print *, g
 end program name
