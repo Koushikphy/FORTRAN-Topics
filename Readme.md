@@ -30,3 +30,5 @@
 1. [FFTW uses different different definition to fourn](src/FFTWvsFOURN)
 1. [Conveniently use multiple time counter](src/timeCounter.f90)
 1. [Solve System of linear equations using SVD](src/solveUsingSVD.f90)
+1. [Distribution of the intrinsic random number generator](src/randomDistribution.f90)
+1. [Central Limit Theorem](src/clt.f90)
