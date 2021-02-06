@@ -1,3 +1,4 @@
+! Diagonalize different types of matrices with LAPACK
 program name
     use lapack_interface
     implicit none
@@ -8,7 +9,7 @@ program name
     complex(kind=8)::bbc(nn), ccc(nn,nn)
 
 
-    ! example : Real , geneeral matrix
+    ! Example 1: Real, general matrix
     aa = reshape([-1.01, 3.98, 3.30, 4.43, 7.31, &
             0.86, 0.53, 8.26, 4.96,-6.43, &
             -4.60,-7.04,-3.89,-7.66,-6.16, &
@@ -24,7 +25,7 @@ program name
     enddo
     write(*,'(////)')
 
-    !example real symmetric
+    ! Example 2: real symmetric
     aa = reshape([ 1.96,-6.49,-0.47,-7.20,-0.65, &
         -6.49, 3.80,-6.39, 1.50,-6.34, &
         -0.47,-6.39, 4.17,-1.51, 2.67, &
@@ -40,6 +41,7 @@ program name
     enddo
     write(*,'(////)')
 
+    ! Example 3: Symmetric tridiagonal matrix
     ! aa = reshape([ 2,-1, 0, 0, 0, &
     !               -1, 2,-1, 0, 0, &
     !                0,-1, 2,-1, 0, &

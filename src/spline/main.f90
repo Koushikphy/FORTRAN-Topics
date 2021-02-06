@@ -1,26 +1,26 @@
+!  Run as :  `gfortran spline.f90 main.f90 && ./a.out`
 program name
-    use spline_mod
+    use splineUtil
     implicit none
-    integer, parameter :: nth=31,nph=61
-    integer, parameter :: newNth=1024, newNph=1024
-
-    integer :: i,j,k,l,ir,n1,n2
+    integer, parameter :: nth=31,nph=61, newNth=512, newNph=512
+    integer :: i,j
     real(kind=8) :: data(nph,nth), xGrid(nth),yGrid(nph),v1,v2,x, diff(nph,nth), dx,dy
+    type(spline2d) :: spl2
+    type(spline1d) :: spl1
 
 
-    open(1,file="data.dat",status="old")
-
+    open(111,file="data.dat",status="old")
     do i=1,nth
         do j=1,nph 
-            read(1,*)x,xGrid(i),yGrid(j),data(j,i),x,x,x
+            read(111,'(3f15.8)')xGrid(i),yGrid(j),data(j,i)
         enddo
-        read(1,*)
+        read(111,*)
     enddo
+    close(111)
 
-    call system_clock(count_rate=ir)
-    call system_clock(n1)
 
-    call splie2(xGrid,yGrid,data,nth,nph,diff)
+    ! 2D interpolation: (nth x nph) -> (newNth x newNph)
+    call spl2%splrep(xGrid, yGrid, data)
 
     dx = (xGrid(nth)-xGrid(1))/real((newNth-1),8)
     dy = (yGrid(nph)-yGrid(1))/real((newNph-1),8)
@@ -29,14 +29,23 @@ program name
         v1 = dx*(i-1) + xGrid(1)
         do j=1,newNph
             v2 = dy*(j-1)+ yGrid(1)
-            call splin2(xGrid,yGrid,data,diff,nth,nph,v1,v2,x)
-
-            write(21,*)v1,v2,x
+            x = spl2%splev(v1,v2)
+            write(211,'(3f15.8)')v1,v2,x
         enddo
-        write(21,*)
+        write(211,*)
     enddo
-    call system_clock(n2)
 
-    print *, '====>', (n2-n1)/real(ir)
 
+
+    !1D interpolation :  (nph) -> (newNph)
+    do j=1,nph ! input for 1D interpolation
+        write(112,'(2f15.8)')yGrid(j),data(j,nth)
+    enddo
+
+    call spl1%splrep(yGrid, data(:,nth))
+    do j=1,newNph
+        v1 = dy*(j-1)+ yGrid(1)
+        x = spl1%splev(v1)
+        write(212,'(2f15.8)')v1,x
+    enddo
 end program name

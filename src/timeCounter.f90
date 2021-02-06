@@ -3,10 +3,16 @@ module timeCounter
         integer :: tstart, tcount, trate
         logical :: init = .false.
         contains
-        procedure :: resetTimer, getTimer,initTimer,getTimerString
+        procedure :: resetTimer, getTimer,initTimer,getTimerString,test
     end type
 
     contains
+    subroutine test(this,a)
+        class(timer):: this
+        integer  :: a 
+        print *, a
+    end
+
     subroutine initTimer(this)  ! start the timer 
         class(timer) :: this
         call system_clock(count_rate=this%trate)
@@ -79,4 +85,5 @@ program name
     print *,"2nd timer time==>", b%getTimer()
 
     print*, a%getTimerString()
+    call a%test(1)
 end program name

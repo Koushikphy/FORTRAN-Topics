@@ -1,4 +1,3 @@
-
 subroutine locate(xx,n,x,l)
     integer, intent(in) :: n
     real(8),    intent(in) :: xx(n),x
