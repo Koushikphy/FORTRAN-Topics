@@ -1,0 +1,1 @@
+Use factorial as direct funtion or use it as a module with precalculated values

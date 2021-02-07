@@ -1,6 +1,6 @@
 module splineUtil
     implicit none
-    ! define proper sline type, then use `splrep` to store the spline representation; use `splev` to evaluate the result
+    ! define proper spline type, then use `splrep` to store the spline representation; use `splev` to evaluate the result
     private
     type, public:: spline1d
         private
