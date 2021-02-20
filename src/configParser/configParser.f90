@@ -3,19 +3,194 @@ module configParser
     ! supported types are: integer, real64, logical, string, complex, array of integer and array of real64s
     ! defualt values can be set by passing as optional 4th argument, which will be used in case of missing the key
     ! Will thorw error, in case of missing key in config file if no default values are set
-    interface parseVar
-        module procedure parse_int, parse_real8, parse_logical, parse_string, parse_complex, parseIntArray, parseReal8Array
-    end interface
-contains
+    implicit none
+    type config
+        logical :: fileOpened = .false.
+        integer :: fileUnit
+        contains
+        procedure :: openConfig, checkFile
+        procedure, private:: parse_int, parse_real8, parse_logical, parse_string, parse_complex,parseIntArray,parseReal8Array
+        generic :: parse => parse_int, parse_real8, parse_logical, parse_string, parse_complex,parseIntArray,parseReal8Array
+    end type config
+
+    contains
 
 
-    subroutine parseIntArray(fUnit, varText, arr, value)
+    subroutine openConfig(self, fName)
+        class(config) :: self
+        character(len=*) :: fName
+        open(newunit=self%fileUnit, file=trim(fName), status='old', action='read')
+        self%fileOpened = .true.
+    end
+
+    subroutine checkFile(self)
+        class(config) :: self
+        if(.not. self%fileOpened) then
+            write(*,*) "No config file is opened"
+            stop
+        endif
+    end
+
+
+    subroutine parse_int(self, varText, var, value)
+        class(config), intent(in) :: self
+        integer :: fUnit, ios
+        character(len=*) :: varText
+        integer :: var
+        integer,optional :: value
+        character(len=100) :: lineTxt, key, val
+
+        call self%checkFile()
+        fUnit = self%fileUnit
+        rewind(fUnit) ! start looking from top
+
+        do
+            read(fUnit, '(a)',iostat=ios) lineTxt
+            if(ios /=0) exit
+            if(ignoreLine(lineTxt)) cycle  ! commented line ignore
+            call getValuePair(lineTxt, key, val)
+            if(key==varText) then
+                read(val, *) var
+                return
+            endif
+        enddo
+        if(present(value)) then
+            var = value
+        else
+            call error(varText)
+        endif
+    end
+
+
+    subroutine parse_real8(self, varText, var, value)
+        class(config), intent(in) :: self
+        integer :: fUnit, ios
+        character(len=*) :: varText
+        real(kind=8) :: var
+        real(kind=8),optional :: value
+        character(len=100) :: lineTxt, key, val
+
+        call self%checkFile()
+        fUnit = self%fileUnit
+        rewind(fUnit)
+
+        do
+            read(fUnit, '(a)',iostat=ios) lineTxt
+            if(ios /=0) exit
+            if(ignoreLine(lineTxt)) cycle  ! commented line ignore
+            call getValuePair(lineTxt, key, val)
+            if(key==varText) then
+                read(val, *) var
+                return
+            endif
+        enddo
+        if(present(value)) then
+            var = value
+        else
+            call error(varText)
+        endif
+    end
+
+    subroutine parse_logical(self, varText, var, value)
+        class(config), intent(in) :: self
+        integer :: fUnit, ios
+        character(len=*) :: varText
+        logical :: var
+        logical,optional :: value
+        character(len=100) :: lineTxt, key, val
+
+        call self%checkFile()
+        fUnit = self%fileUnit
+        rewind(fUnit)
+
+        do
+            read(fUnit, '(a)',iostat=ios) lineTxt
+            if(ios /=0) exit
+            if(ignoreLine(lineTxt)) cycle  ! commented line ignore
+            call getValuePair(lineTxt, key, val)
+            if(key==varText) then
+                read(val, *) var
+                return
+            endif
+        enddo
+        if(present(value)) then
+            var = value
+        else
+            call error(varText)
+        endif
+
+    end
+
+    subroutine parse_string(self, varText, var, value)
+        class(config), intent(in) :: self
+        integer :: fUnit, ios
+        character(len=*) :: varText, var
+        character(len=*), optional :: value
+        character(len=100) :: lineTxt, key, val
+
+        call self%checkFile()
+        fUnit = self%fileUnit
+        rewind(fUnit)
+
+        do
+            read(fUnit, '(a)',iostat=ios) lineTxt
+            if(ios /=0) exit
+            if(ignoreLine(lineTxt)) cycle  ! commented line/blank line ignore
+            call getValuePair(lineTxt, key, val)
+            if(key==varText) then
+                var = val
+                return
+            endif
+        enddo
+        if(present(value)) then
+            var = value
+        else
+            call error(varText)
+        endif
+    end
+
+
+    subroutine parse_complex(self, varText, var, value)
+        class(config), intent(in) :: self
+        integer :: fUnit, ios
+        character(len=*) :: varText
+        complex(kind=8) :: var
+        complex(kind=8),optional :: value
+        character(len=100) :: lineTxt, key, val
+
+        call self%checkFile()
+        fUnit = self%fileUnit
+        rewind(fUnit)
+
+        do
+            read(fUnit, '(a)',iostat=ios) lineTxt
+            if(ios /=0) exit
+            if(ignoreLine(lineTxt)) cycle  ! commented line ignore
+            call getValuePair(lineTxt, key, val)
+            if(key==varText) then
+                read(val, *) var
+                return
+            endif
+        enddo
+        if(present(value)) then
+            var = value
+        else
+            call error(varText)
+        endif
+    end
+
+    subroutine parseIntArray(self, varText, arr, value)
+        class(config), intent(in) :: self
         integer :: fUnit, ios
         integer, allocatable :: arr(:)
         integer, intent(in), optional :: value(:)
-        character(len=*) :: varText 
+        character(len=*) :: varText
         character(len=100) :: lineTxt, key, val
+
+        call self%checkFile()
+        fUnit = self%fileUnit
         rewind(fUnit) ! start looking from top
+
         do
             read(fUnit, '(a)',iostat=ios) lineTxt
             if(ios /=0) exit
@@ -34,13 +209,18 @@ contains
         endif
     end
 
-    subroutine parseReal8Array(fUnit, varText, arr, value)
+    subroutine parseReal8Array(self, varText, arr, value)
+        class(config), intent(in) :: self
         integer :: fUnit, ios
         real(kind=8), allocatable :: arr(:)
-        real(kind=8), intent(in), optional :: value(:) 
-        character(len=*) :: varText 
+        real(kind=8), intent(in), optional :: value(:)
+        character(len=*) :: varText
         character(len=100) :: lineTxt, key, val
+
+        call self%checkFile()
+        fUnit = self%fileUnit
         rewind(fUnit) ! start looking from top
+
         do
             read(fUnit, '(a)',iostat=ios) lineTxt
             if(ios /=0) exit
@@ -49,6 +229,7 @@ contains
             if(key==varText) then
                 allocate(arr(countSubStr(val)))
                 read(val,*) arr
+                return
             endif
         enddo
         if(present(value))then
@@ -60,137 +241,14 @@ contains
     end
 
     function countSubStr(str) result(nSubStr) !total length of the array, from counting occurrence of comma(',')
-        character(len=*) :: str 
-        integer :: nSubStr, lenTrim 
+        character(len=*) :: str
+        integer :: nSubStr, lenTrim,i
         str = adjustl(str)
         lenTrim = len_trim(str)
         if (str(lenTrim:lenTrim) == ',') stop "Bad input: Remove trailing comma(',')."
         nSubStr = count([(str(i:i), i=1,lenTrim)]==',')+1
     end
 
-
-    subroutine parse_int(fUnit, varText, var, value)
-        integer :: fUnit, ios
-        character(len=*) :: varText 
-        integer :: var 
-        integer,optional :: value 
-        character(len=100) :: lineTxt, key, val
-        rewind(fUnit) ! start looking from top
-        do
-            read(fUnit, '(a)',iostat=ios) lineTxt
-            if(ios /=0) exit
-            if(ignoreLine(lineTxt)) cycle  ! commented line ignore
-            call getValuePair(lineTxt, key, val)
-            if(key==varText) then
-                read(val, *) var
-                return
-            endif
-        enddo
-        if(present(value)) then 
-            var = value
-        else 
-            call error(varText)
-        endif
-
-    end
-
-    subroutine parse_real8(fUnit, varText, var, value)
-        integer :: fUnit, ios
-        character(len=*) :: varText 
-        real(kind=8) :: var 
-        real(kind=8),optional :: value
-        character(len=100) :: lineTxt, key, val
-        rewind(fUnit)
-        do
-            read(fUnit, '(a)',iostat=ios) lineTxt
-            if(ios /=0) exit
-            if(ignoreLine(lineTxt)) cycle  ! commented line ignore
-            call getValuePair(lineTxt, key, val)
-            if(key==varText) then
-                read(val, *) var
-                return
-            endif
-        enddo
-        if(present(value)) then 
-            var = value
-        else 
-            call error(varText)
-        endif
-
-    end
-
-    subroutine parse_logical(fUnit, varText, var, value)
-        integer :: fUnit, ios
-        character(len=*) :: varText 
-        logical :: var 
-        logical,optional :: value
-        character(len=100) :: lineTxt, key, val
-        rewind(fUnit)
-        do
-            read(fUnit, '(a)',iostat=ios) lineTxt
-            if(ios /=0) exit
-            if(ignoreLine(lineTxt)) cycle  ! commented line ignore
-            call getValuePair(lineTxt, key, val)
-            if(key==varText) then
-                read(val, *) var
-                return
-            endif
-        enddo
-        if(present(value)) then 
-            var = value
-        else 
-            call error(varText)
-        endif
-
-    end
-
-    subroutine parse_string(fUnit, varText, var, value)
-        integer :: fUnit, ios
-        character(len=*) :: varText, var 
-        character(len=*), optional :: value
-        character(len=100) :: lineTxt, key, val
-        rewind(fUnit)
-        do
-            read(fUnit, '(a)',iostat=ios) lineTxt
-            if(ios /=0) exit
-            if(ignoreLine(lineTxt)) cycle  ! commented line/blank line ignore
-            call getValuePair(lineTxt, key, val)
-            if(key==varText) then
-                var = val
-                return
-            endif
-        enddo
-        if(present(value)) then 
-            var = value
-        else 
-            call error(varText)
-        endif
-    end
-
-    
-    subroutine parse_complex(fUnit, varText, var, value)
-        integer :: fUnit, ios
-        character(len=*) :: varText 
-        complex(kind=8) :: var 
-        complex(kind=8),optional :: value 
-        character(len=100) :: lineTxt, key, val
-        rewind(fUnit)
-        do
-            read(fUnit, '(a)',iostat=ios) lineTxt
-            if(ios /=0) exit
-            if(ignoreLine(lineTxt)) cycle  ! commented line ignore
-            call getValuePair(lineTxt, key, val)
-            if(key==varText) then
-                read(val, *) var
-                return
-            endif
-        enddo
-        if(present(value)) then 
-            var = value
-        else 
-            call error(varText)
-        endif
-    end
 
     subroutine getValuePair(line, key, val)
         character(len=100) :: line, key, val
@@ -205,11 +263,12 @@ contains
     end subroutine
 
     subroutine error(varText)
-        character(len=*) :: varText 
-        stop "Keyword '"//varText// "' not found in the config file"
+        character(len=*), intent(in) :: varText
+        write(*,*) "Keyword '"//varText// "' not found in the config file"
+        stop
     end
 
-    function ignoreLine(txt) 
+    function ignoreLine(txt)
         ! comment or blank line
         character(len=*) :: txt
         logical :: ignoreLine
@@ -229,13 +288,16 @@ contains
         enddo
         toLowerCase = str
     end
-end
+
+end module
+
 
 
 program name
     use configParser
     implicit none
-    integer :: fUnit
+    type(config) :: tt 
+
     integer :: a,aa
     real(kind=8) :: b 
     logical :: c
@@ -245,16 +307,20 @@ program name
     real(kind=8) , allocatable :: g(:)
 
 
-    open(fUnit, file='./abc.config',status='old',action='read')
-    call parseVar(fUnit, 'a', a) ! parse integer
-    call parseVar(fUnit, 'aa', aa, 66)  ! parse integer with a default value, defualt values are passed as optional 4th argument
-    call parseVar(fUnit, 'b', b) ! parse real64
-    call parseVar(fUnit, 'c', c) ! parse logical
-    call parseVar(fUnit, 'd', d) ! parse string
-    call parseVar(fUnit, 'e', e) ! parse conmplex
-    call parseVar(fUnit, 'f', f) ! parse array of integer, variable has to be allocatable
-    call parseVar(fUnit, 'ff', ff, [1,2,99]) ! parse array of integer, variable has to be allocatable
-    call parseVar(fUnit, 'g', g) ! parse array of real64, 
+    call tt%openConfig('./abc.config')
+
+
+    call tt%parse( 'a', a) ! parse integer
+    call tt%parse( 'aa', aa, 66)  ! parse integer with a default value, defualt values are passed as optional 4th argument
+    call tt%parse( 'b', b) ! parse real64
+    call tt%parse( 'c', c) ! parse logical
+    call tt%parse( 'd', d) ! parse string
+    call tt%parse( 'e', e) ! parse conmplex
+    call tt%parse( 'f', f) ! parse array of integer, variable has to be allocatable
+    call tt%parse( 'ff', ff, [1,2,99]) ! parse array of integer, variable has to be allocatable
+    call tt%parse( 'g', g) ! parse array of real64, 
+
+
     print *, a
     print *,aa
     print *,b
@@ -264,4 +330,6 @@ program name
     print *, f
     print *, ff
     print *, g
+
+
 end program name
