@@ -3,6 +3,7 @@
         ".gitignore": true,
         "**/*.pyc":true,
         "**/*.mod":true,
+        "**/*.mod0":true,
         "**/*.out":true
     }
 }
