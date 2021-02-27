@@ -1,30 +1,37 @@
 module configParser
-    ! generic function `parseVar` to parse variable of different kind
-    ! supported types are: integer, real64, logical, string, complex, array of integer and array of real64s
-    ! defualt values can be set by passing as optional 4th argument, which will be used in case of missing the key
-    ! Will thorw error, in case of missing key in config file if no default values are set
+    !! A generic ConfigParser to parse key-value pair from config file.
+    !! Supported types are: integer, real64, logical, string, complex, array of integer and array of real64s  
+    !! Defualt values can be set by passing as optional 4th argument, which will be used in case of missing the key  
+    !! Will thorw error, in case of missing key in config file if no default values are set  
     implicit none
+    private
     type config
-        logical :: fileOpened = .false.
-        integer :: fileUnit
+        !! Config parser object. 
+        !! First call the `openConfig` to initialize the parser, then use the generic `parseVar` function to parse required variable
+        logical,private :: fileOpened = .false.
+        integer,private :: fileUnit
         contains
-        procedure :: openConfig, checkFile
-        procedure, private:: parse_int, parse_real8, parse_logical, parse_string, parse_complex,parseIntArray,parseReal8Array
+        procedure :: openConfig
+        procedure,private :: checkFile, parse_int, parse_real8, parse_logical, parse_string, parse_complex,&
+                             parseIntArray,parseReal8Array
         generic :: parse => parse_int, parse_real8, parse_logical, parse_string, parse_complex,parseIntArray,parseReal8Array
     end type config
-
+    public :: config
     contains
 
 
     subroutine openConfig(self, fName)
-        class(config) :: self
+        !! Open config file for parsing
+        class(config),intent(inout) :: self
         character(len=*) :: fName
         open(newunit=self%fileUnit, file=trim(fName), status='old', action='read')
         self%fileOpened = .true.
     end
 
+
     subroutine checkFile(self)
-        class(config) :: self
+        !! Check if the file is open for reading
+        class(config),intent(in) :: self
         if(.not. self%fileOpened) then
             write(*,*) "No config file is opened"
             stop
@@ -33,11 +40,12 @@ module configParser
 
 
     subroutine parse_int(self, varText, var, value)
-        class(config), intent(in) :: self
+        !! Parse integer 
+        class(config), intent(in)   :: self    !! config object
+        character(len=*),intent(in) :: varText !! Variable key
+        integer,intent(out)         :: var     !! Variable value
+        integer,intent(in),optional :: value   !! Default optional value
         integer :: fUnit, ios
-        character(len=*) :: varText
-        integer :: var
-        integer,optional :: value
         character(len=100) :: lineTxt, key, val
 
         call self%checkFile()
@@ -63,11 +71,12 @@ module configParser
 
 
     subroutine parse_real8(self, varText, var, value)
-        class(config), intent(in) :: self
+        !! Parse double precision real number 
+        class(config), intent(in)        :: self   
+        character(len=*),intent(in)      :: varText
+        real(kind=8),intent(out)         :: var
+        real(kind=8),intent(in),optional :: value
         integer :: fUnit, ios
-        character(len=*) :: varText
-        real(kind=8) :: var
-        real(kind=8),optional :: value
         character(len=100) :: lineTxt, key, val
 
         call self%checkFile()
@@ -90,13 +99,15 @@ module configParser
             call error(varText)
         endif
     end
+
 
     subroutine parse_logical(self, varText, var, value)
-        class(config), intent(in) :: self
+        !! Parse logical variable
+        class(config), intent(in)   :: self
+        character(len=*),intent(in) :: varText
+        logical,intent(out)         :: var
+        logical,intent(in),optional :: value
         integer :: fUnit, ios
-        character(len=*) :: varText
-        logical :: var
-        logical,optional :: value
         character(len=100) :: lineTxt, key, val
 
         call self%checkFile()
@@ -118,14 +129,16 @@ module configParser
         else
             call error(varText)
         endif
-
     end
 
+
     subroutine parse_string(self, varText, var, value)
-        class(config), intent(in) :: self
+        !! Parse string variable
+        class(config), intent(in)             :: self
+        character(len=*),intent(in)           :: varText
+        character(len=*),intent(out)          :: var
+        character(len=*),intent(in), optional :: value
         integer :: fUnit, ios
-        character(len=*) :: varText, var
-        character(len=*), optional :: value
         character(len=100) :: lineTxt, key, val
 
         call self%checkFile()
@@ -151,11 +164,12 @@ module configParser
 
 
     subroutine parse_complex(self, varText, var, value)
-        class(config), intent(in) :: self
+        !! Parse complex number
+        class(config), intent(in)             :: self
+        character(len=*), intent(in)          :: varText
+        complex(kind=8),intent(out)           :: var
+        complex(kind=8), intent(in), optional :: value
         integer :: fUnit, ios
-        character(len=*) :: varText
-        complex(kind=8) :: var
-        complex(kind=8),optional :: value
         character(len=100) :: lineTxt, key, val
 
         call self%checkFile()
@@ -179,12 +193,14 @@ module configParser
         endif
     end
 
+
     subroutine parseIntArray(self, varText, arr, value)
-        class(config), intent(in) :: self
+        !! Parse array of integers
+        class(config), intent(in)        :: self
+        character(len=*),intent(in)      :: varText
+        integer,intent(out), allocatable :: arr(:)
+        integer, intent(in), optional    :: value(:)
         integer :: fUnit, ios
-        integer, allocatable :: arr(:)
-        integer, intent(in), optional :: value(:)
-        character(len=*) :: varText
         character(len=100) :: lineTxt, key, val
 
         call self%checkFile()
@@ -208,13 +224,15 @@ module configParser
             call error(varText)
         endif
     end
+
 
     subroutine parseReal8Array(self, varText, arr, value)
-        class(config), intent(in) :: self
+        !! Parse array of real numbers
+        class(config), intent(in)             :: self
+        character(len=*),intent(in)           :: varText
+        real(kind=8),intent(out), allocatable :: arr(:)
+        real(kind=8), intent(in), optional    :: value(:)
         integer :: fUnit, ios
-        real(kind=8), allocatable :: arr(:)
-        real(kind=8), intent(in), optional :: value(:)
-        character(len=*) :: varText
         character(len=100) :: lineTxt, key, val
 
         call self%checkFile()
@@ -237,10 +255,11 @@ module configParser
         else
             call error(varText)
         endif
-
     end
 
-    function countSubStr(str) result(nSubStr) !total length of the array, from counting occurrence of comma(',')
+
+    function countSubStr(str) result(nSubStr) 
+        !count the total length of the array, from counting occurrence of comma(',')
         character(len=*) :: str
         integer :: nSubStr, lenTrim,i
         str = adjustl(str)
@@ -251,6 +270,7 @@ module configParser
 
 
     subroutine getValuePair(line, key, val)
+        ! get key-value pair from a line
         character(len=100) :: line, key, val
         integer :: start, com
         start = index( line, '=')
@@ -262,11 +282,13 @@ module configParser
         val = adjustl(line(start+1:))
     end subroutine
 
+
     subroutine error(varText)
         character(len=*), intent(in) :: varText
         write(*,*) "Keyword '"//varText// "' not found in the config file"
         stop
     end
+
 
     function ignoreLine(txt)
         ! comment or blank line
@@ -276,6 +298,7 @@ module configParser
         ignoreLine = .false.
         if(txt(:1)=="#" .or. len_trim(txt)==0) ignoreLine = .true.
     end
+
 
     function toLowerCase(str)
         ! for convenience all string will be  will be converted to lowercase for checking
@@ -308,6 +331,7 @@ program name
 
 
     call tt%openConfig('./abc.config')
+
 
 
     call tt%parse( 'a', a) ! parse integer
