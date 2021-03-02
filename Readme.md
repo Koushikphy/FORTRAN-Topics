@@ -19,7 +19,7 @@
 1. [MPI+OpenMP Boilerplate](src/mpiOpenMP.f90)  
 1. [Factorial](src/factorial)
 1. [linspace/arrange anlogous to NumPy](src/linspace.f90)
-1. [Namelist file I/O](src/namelist_main.f90)
+1. [Namelist file I/O](src/namelist)
 1. [Config Parser](src/configParser)
 1. [Pythag](src/pythag.f90)
 1. [Spline Interpolation](src/spline)
