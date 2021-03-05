@@ -34,3 +34,4 @@
 1. [Solve System of linear equations using SVD](src/solveUsingSVD.f90)
 1. [Distribution of the intrinsic random number generator](src/randomDistribution.f90)
 1. [Central Limit Theorem](src/clt.f90)
+1. [strftime : Get time stamp in a given format](src/strftime)
