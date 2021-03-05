@@ -16,7 +16,7 @@ module timeStamp
         character(kind=c_char, len=100), pointer :: timestr
         call c_f_pointer( get(format//c_null_char), timestr)
     end
-end module 
+end module
 
 program name
     use timeStamp

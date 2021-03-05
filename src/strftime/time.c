@@ -7,6 +7,7 @@ char *format_time(char * argc){
     static char output[100];
     time_t rawtime;
     struct tm * timeinfo;
+
     time ( &rawtime );
     timeinfo = localtime ( &rawtime );
     strftime(output, sizeof(output), argc, timeinfo);

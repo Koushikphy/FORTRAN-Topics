@@ -3,16 +3,10 @@ module timeCounter
         integer :: tstart, tcount, trate
         logical :: init = .false.
         contains
-        procedure :: resetTimer, getTimer,initTimer,getTimerString,test
+        procedure :: resetTimer, getTimer,initTimer,getTimerString
     end type
 
     contains
-    subroutine test(this,a)
-        class(timer):: this
-        integer  :: a 
-        print *, a
-    end
-
     subroutine initTimer(this)  ! start the timer 
         class(timer) :: this
         call system_clock(count_rate=this%trate)
@@ -46,13 +40,6 @@ module timeCounter
         sec  = val        ; val = val - sec
         write(getTimerString, "(i0.3,':',i0.2,':',i0.2,f0.3)")hour,mint,sec,val
     end
-
-    function getDateTime() result(dtm) ! returns current date and time
-        character(len=20) :: dtm
-        integer:: v(8)
-        call date_and_time(VALUES=v)
-        write(dtm,'(i0.2,"-",i0.2,"-",i4,2x,i0.2,":",i0.2,":",i0.2)') v(3),v(2),v(1),v(5),v(6),v(7)
-    end function getDateTime
 end
 
 
@@ -84,6 +71,4 @@ program name
     print *,"1st timer time==>", a%getTimer()
     print *,"2nd timer time==>", b%getTimer()
 
-    print*, a%getTimerString()
-    call a%test(1)
 end program name

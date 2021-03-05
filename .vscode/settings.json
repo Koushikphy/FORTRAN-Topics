@@ -4,6 +4,9 @@
         "**/*.pyc":true,
         "**/*.mod":true,
         "**/*.mod0":true,
+        "**/*.o":true,
+        "**/fort.*":true,
+        "**/.gitignore":true,
         "**/*.out":true
     }
 }
