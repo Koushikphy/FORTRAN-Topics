@@ -1,15 +1,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <string.h>
 
 
-char *format_time(char * argc){
-    static char output[100];
+
+void format_time(char * argc, char * output, int *n){
     time_t rawtime;
     struct tm * timeinfo;
-
     time ( &rawtime );
     timeinfo = localtime ( &rawtime );
-    strftime(output, sizeof(output), argc, timeinfo);
-    return output;
+    strftime(output, *n, argc, timeinfo);
+    *n = strlen(output); 
 }

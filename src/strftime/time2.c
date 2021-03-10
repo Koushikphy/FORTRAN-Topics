@@ -5,13 +5,13 @@
 
 
 
-void format_time(char * argc, char * output, int *n){
+void format_time(char * argc, unsigned char ** output, int *n){
     time_t rawtime;
     struct tm * timeinfo;
+    static char out[100];
     time ( &rawtime );
     timeinfo = localtime ( &rawtime );
-    strftime(output, 100, argc, timeinfo);
-    *n = strlen(output); 
+    strftime(out, 100, argc, timeinfo);
+    *output = out;
+    *n = strlen(*output); 
 }
-
-
